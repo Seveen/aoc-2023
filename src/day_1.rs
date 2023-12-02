@@ -1,5 +1,5 @@
 pub fn part_1(input: String) {
-    let mut acc = 0;
+    let mut result = 0;
     for line in input.lines() {
         let mut first = None;
         let mut last = None;
@@ -21,13 +21,14 @@ pub fn part_1(input: String) {
         };
 
         if let Ok(number) = two_digits.parse::<u32>() {
-            acc += number;
+            result += number;
         }
     }
 
-    println!("{acc}");
+    println!("{result}");
 }
 
+// There are probably easier ways (with or without a recursive descent parser)
 peg::parser! {
     grammar parser() for str {
         rule one() -> Option<u32> = "one" { Some(1) }
@@ -74,20 +75,16 @@ peg::parser! {
 }
 
 pub fn part_2(input: String) {
-    let mut acc = 0;
+    let mut result = 0;
     for line in input.lines() {
-        print!("{line:?} ");
         if let Ok(calibration) = parser::calibration(line)
             .map(|calibration| calibration.into_iter().flatten().collect::<Vec<_>>())
         {
-            print!("{calibration:?} ");
             if let (Some(first), Some(last)) = (calibration.first(), calibration.last()) {
-                let result = first * 10 + last;
-                println!("{result}");
-                acc += result;
+                result += first * 10 + last;
             }
         }
     }
 
-    println!("{acc}");
+    println!("{result}");
 }
